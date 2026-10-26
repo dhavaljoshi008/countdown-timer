@@ -21,7 +21,6 @@ export function TimeOptions({
         <select id={id} name={name} value={value} onChange={
             (e) => {
                 onChange(Number(e.target.value));
-                console.log(`Setting ${name} to ${e.target.value}`) /* TODO: remove */
             }
             } disabled={disabled}>
           {Array.from({ length: maxCount + 1 }, (_, i) => (
