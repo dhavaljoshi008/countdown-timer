@@ -1,0 +1,31 @@
+:root {
+  --text: #6b6375;   /* muted: labels, secondary text */
+  --text-h: #0f172a; /* strong: values, headings */
+  --bg: #ffffff;
+  --accent: #166534		; /* Emrald (green) */
+  
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+
+  font: 18px/145% var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --accent: #34d399; /* Emrald (green) */
+    }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+}
