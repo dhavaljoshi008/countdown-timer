@@ -15,6 +15,7 @@ function App() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
+  const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
 
   function reset() {
     setRunning(false);
+    setStarted(false);
     setFinished(false);
     setHours(INITIAL_HOURS);
     setMinutes(INITIAL_MINUTES);
@@ -78,25 +80,28 @@ function App() {
             />
           </div>
           <div className="actions">
-            <button
-              className="btn btn-primary"
-              disabled={
-                running || (hours === 0 && minutes === 0 && seconds === 0)
-              }
-              onClick={() => {
-                setRunning(true);
-                setFinished(false);
-              }}
-            >
-              Start
-            </button>
+          <button
+  className="btn btn-primary"
+  disabled={!running && hours === 0 && minutes === 0 && seconds === 0}
+  onClick={() => {
+    if (running) {
+      setRunning(false);          // pause
+    } else {
+      setRunning(true);           // start or resume
+      setStarted(true);
+      setFinished(false);
+    }
+  }}
+>
+  {running ? "Pause" : started ? "Resume" : "Start"}
+</button>
             <button className="btn btn-secondary" onClick={reset}>
               Reset
             </button>
           </div>
         </div>
       </header>
-      <FlipClock hours={hours} minutes={minutes} seconds={seconds} finished={finished}></FlipClock>
+      <FlipClock hours={hours} minutes={minutes} seconds={seconds} paused={started && !running} finished={finished}></FlipClock>
     </main>
   );
 }

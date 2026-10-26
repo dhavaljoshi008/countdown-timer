@@ -139,6 +139,10 @@
   gap: var(--unit-gap);
 }
 
+.flip-clock.paused {
+  opacity: 0.6;
+}
+
 .flip-unit {
   position: relative;
   display: flex;

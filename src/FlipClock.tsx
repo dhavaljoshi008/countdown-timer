@@ -50,18 +50,22 @@ export function FlipClock({
   hours,
   minutes,
   seconds,
+  paused,
   finished
 }: {
   hours: number;
   minutes: number;
   seconds: number;
+  paused: boolean;
   finished: boolean;
 }) {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <div
-      className={finished ? "flip-clock finished" : "flip-clock"}
+    className={["flip-clock", paused && "paused", finished && "finished"]
+        .filter(Boolean)
+        .join(" ")}
       role="timer"
       aria-label={`${pad(hours)} hours ${pad(minutes)} minutes ${pad(
         seconds
