@@ -1,7 +1,20 @@
+function FlipDigit({ value } : { value : number }) {
+    return <div className="flip-digit">{ value } </div>;
+}
+
+
+
 function FlipUnit({ value, label }: { value: number; label: string }) {
+
+    const[tens, ones] = String(value).padStart(2, "0").split("").map(Number);
+
   return (
     <div className="flip-unit">
-      {value} {label}
+        <div className="flip-unit-digits">
+            <FlipDigit value={tens}/>
+            <FlipDigit value={ones}/>
+        </div>
+        <span className="flip-label">{label}</span>
     </div>
   );
 }
