@@ -130,9 +130,9 @@
 }
 
 .flip-clock {
-  --digit-w: clamp(2rem, 9vw, 3.5rem);
+  --digit-w: clamp(2rem, 11vw, 8rem);
   --digit-h: calc(var(--digit-w) * 1.45);
-  --unit-gap: clamp(1rem, 4vw, 2.5rem);
+  --unit-gap: clamp(1rem, 4vw, 4rem);
 
   display: flex;
   justify-content: center;
@@ -166,22 +166,101 @@
 }
 
 .flip-digit {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
   width: var(--digit-w);
   height: var(--digit-h);
-  font-size: calc(var(--digit-w) * 1);
+  font-size: var(--digit-w);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--card-text);
-  background: var(--card-bg);
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  perspective: 400px;
+}
+
+.flip-digit::after {
+  /* the fold line */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+.half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  background: var(--card-bg);
+  backface-visibility: hidden;
+}
+
+.half.top {
+  top: 0;
+  border-radius: 8px 8px 0 0;
+  transform-origin: bottom;
+}
+
+.half.bottom {
+  bottom: 0;
+  border-radius: 0 0 8px 8px;
+  transform-origin: top;
+}
+
+.half span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 200%; /* as tall as the whole card */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.half.top span {
+  top: 0;
+}
+.half.bottom span {
+  bottom: 0;
+}
+
+.flap-top {
+  z-index: 2;
+  animation: flip-top 0.3s ease-in forwards;
+}
+
+.flap-bottom {
+  z-index: 2;
+  transform: rotateX(90deg);
+  animation: flip-bottom 0.3s ease-out 0.3s forwards;
+}
+
+@keyframes flip-top {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flip-bottom {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
 }
 
 .flip-label {
-  font-size: 0.7rem;
+  font-size: clamp(0.7rem, 1.5vw, 1.2rem);;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -239,5 +318,22 @@
     padding: 0.35rem 0.75rem;
     font-size: 0.8rem;
     border-radius: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap-top,
+  .flap-bottom {
+    display: none;
+  }
+}
+
+.flip-clock.finished .flip-digit {
+  animation: pulse 1s ease-in-out 3;
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 12px 3px var(--accent);
   }
 }
