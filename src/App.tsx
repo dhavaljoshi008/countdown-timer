@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { TimeOptions } from "./TimeOptions";
 import { FlipClock } from "./FlipClock";
@@ -14,8 +14,28 @@ function App() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    if (!running) {
+      return;
+    }
+  
+    const id = setInterval(() => {
+      const totalSeconds = hours * 3600 + minutes * 60 + seconds - 1;
+      setHours(Math.floor(totalSeconds / 3600));
+      setMinutes(Math.floor((totalSeconds % 3600) / 60));
+      setSeconds(totalSeconds % 60);
+      if (totalSeconds <= 0) {
+        setRunning(false);
+      }
+    }, 1000);
+  
+    return () => clearInterval(id);
+  }, [running, hours, minutes, seconds]);
 
   function reset() {
+    setRunning(false);
     setHours(INITIAL_HOURS);
     setMinutes(INITIAL_MINUTES);
     setSeconds(INITIAL_SECONDS);
@@ -33,6 +53,7 @@ function App() {
               maxCount={HOUR_OPTIONS_COUNT}
               value={hours}
               onChange={setHours}
+              disabled={running}
             />
             <TimeOptions
               id="minutes"
@@ -41,6 +62,7 @@ function App() {
               maxCount={MIN_OPTIONS_COUNT}
               value={minutes}
               onChange={setMinutes}
+              disabled={running}
             />
             <TimeOptions
               id="seconds"
@@ -49,10 +71,13 @@ function App() {
               maxCount={SEC_OPTIONS_COUNT}
               value={seconds}
               onChange={setSeconds}
+              disabled={running}
             />
           </div>
           <div className="actions">
-            <button className="btn btn-primary">Start</button>
+            <button className="btn btn-primary"
+            disabled={running || (hours === 0 && minutes === 0 && seconds === 0)}
+            onClick={() => setRunning(true)}>Start</button>
             <button className="btn btn-secondary" onClick={reset}>
               Reset
             </button>

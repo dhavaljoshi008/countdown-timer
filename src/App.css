@@ -36,7 +36,7 @@
   padding: 0.5rem 1.75rem 0.5rem 0.75rem;
   font: inherit;
   font-size: 1rem;
-  font-weight: 500rem;
+  font-weight: 500;
   letter-spacing: normal;
   text-transform: none;
   color: var(--text-h);
@@ -54,10 +54,20 @@
   background-color: rgba(127, 127, 127, 0.18);
 }
 
+.field select:disabled:hover {
+  background-color: rgba(127, 127, 127, 0.05); /* cancel the hover highlight */
+}
+
 .field select:focus-visible {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.field select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(127, 127, 127, 0.05);
 }
 
 .actions {
@@ -81,6 +91,12 @@
     box-shadow 0.15s;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
 .btn-primary {
   background: var(--accent);
   color: #fff;
@@ -88,6 +104,10 @@
 
 .btn-primary:hover {
   filter: brightness(1.1);
+}
+
+.btn-primary:disabled:hover {
+  filter: none; /* cancel the brightness boost */
 }
 
 .btn-secondary {
