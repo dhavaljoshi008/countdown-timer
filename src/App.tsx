@@ -30,6 +30,7 @@ function App() {
       setSeconds(totalSeconds % 60);
       if (totalSeconds <= 0) {
         setRunning(false);
+        setStarted(false);
         setFinished(true);
       }
     }, 1000);
