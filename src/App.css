@@ -1,12 +1,16 @@
 .app {
+  position: relative;
+  display: flex;
+  align-items: center; /* vertical center */
+  justify-content: center; /* horizontal center */
   min-height: 100svh;
   padding: 1.5rem;
 }
 
 .app-header {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
 }
 
 .controls {
@@ -36,7 +40,7 @@
   padding: 0.5rem 1.75rem 0.5rem 0.75rem;
   font: inherit;
   font-size: 1rem;
-  font-weight: 500rem;
+  font-weight: 500;
   letter-spacing: normal;
   text-transform: none;
   color: var(--text-h);
@@ -54,10 +58,20 @@
   background-color: rgba(127, 127, 127, 0.18);
 }
 
+.field select:disabled:hover {
+  background-color: rgba(127, 127, 127, 0.05); /* cancel the hover highlight */
+}
+
 .field select:focus-visible {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.field select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(127, 127, 127, 0.05);
 }
 
 .actions {
@@ -81,6 +95,12 @@
     box-shadow 0.15s;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
 .btn-primary {
   background: var(--accent);
   color: #fff;
@@ -88,6 +108,10 @@
 
 .btn-primary:hover {
   filter: brightness(1.1);
+}
+
+.btn-primary:disabled:hover {
+  filter: none; /* cancel the brightness boost */
 }
 
 .btn-secondary {
@@ -103,4 +127,217 @@
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.flip-clock {
+  --digit-w: clamp(2rem, 11vw, 8rem);
+  --digit-h: calc(var(--digit-w) * 1.45);
+  --unit-gap: clamp(1rem, 4vw, 4rem);
+
+  display: flex;
+  justify-content: center;
+  gap: var(--unit-gap);
+}
+
+.flip-clock.paused {
+  opacity: 0.6;
+}
+
+.flip-unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* colon after every unit except the last */
+.flip-unit:not(:last-child)::after {
+  content: ":";
+  position: absolute;
+  top: calc(var(--digit-h) / 2);
+  left: calc(100% + var(--unit-gap) / 2);
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--digit-w) * 0.9);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-h);
+}
+
+.flip-unit-digits {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.flip-digit {
+  position: relative;
+  width: var(--digit-w);
+  height: var(--digit-h);
+  font-size: var(--digit-w);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--card-text);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  perspective: 400px;
+}
+
+.flip-digit::after {
+  /* the fold line */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+.half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  background: var(--card-bg);
+  backface-visibility: hidden;
+}
+
+.half.top {
+  top: 0;
+  border-radius: 8px 8px 0 0;
+  transform-origin: bottom;
+}
+
+.half.bottom {
+  bottom: 0;
+  border-radius: 0 0 8px 8px;
+  transform-origin: top;
+}
+
+.half span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 200%; /* as tall as the whole card */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.half.top span {
+  top: 0;
+}
+.half.bottom span {
+  bottom: 0;
+}
+
+.flap-top {
+  z-index: 2;
+  animation: flip-top 0.3s ease-in forwards;
+}
+
+.flap-bottom {
+  z-index: 2;
+  transform: rotateX(90deg);
+  animation: flip-bottom 0.3s ease-out 0.3s forwards;
+}
+
+@keyframes flip-top {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flip-bottom {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+.flip-label {
+  font-size: clamp(0.7rem, 1.5vw, 1.2rem);;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+@media (max-width: 600px) {
+  :root {
+    font-size: 15px;
+  }
+
+  .app {
+    flex-direction: column;
+  }
+
+  .app-header {
+    position: static;
+    align-self: stretch;
+  }
+
+  .flip-clock {
+    margin: auto; /* centers the clock in the space below the header */
+  }
+
+  .app {
+    padding: 1rem;
+  }
+
+  .controls {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .inputs {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .field {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.6rem;
+  }
+
+  .field select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.3rem 1.3rem 0.3rem 0.45rem;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    background-position: right 0.4rem center;
+  }
+
+  .btn {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap-top,
+  .flap-bottom {
+    display: none;
+  }
+}
+
+.flip-clock.finished .flip-digit {
+  animation: pulse 1s ease-in-out 3;
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 12px 3px var(--accent);
+  }
 }
